@@ -14,7 +14,6 @@ app.UseMiddleware(builder.Configuration);
 
 app.Run();
 
-
 [ExcludeFromCodeCoverage]
 
 #pragma warning disable CA1050

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-TestMobiBuy.Consumer-5a170990-e427-4929-847b-afa584b11b88</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TestMobiBuy.Share\TestMobiBuy.Share.csproj" />
+    <ProjectReference Include="..\TestMobiBuy.Domain\TestMobiBuy.Domain.csproj" />
+    <ProjectReference Include="..\TestMobiBuy.Application\TestMobiBuy.Application.csproj" />
+  </ItemGroup>
+</Project>

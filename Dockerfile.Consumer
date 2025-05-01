@@ -1,0 +1,26 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# Copia os arquivos do projeto
+COPY ["src/TestMobiBuy.Consumer/TestMobiBuy.Consumer.csproj", "TestMobiBuy.Consumer/"]
+COPY ["src/TestMobiBuy.Application/TestMobiBuy.Application.csproj", "TestMobiBuy.Application/"]
+COPY ["src/TestMobiBuy.Domain/TestMobiBuy.Domain.csproj", "TestMobiBuy.Domain/"]
+COPY ["src/TestMobiBuy.Share/TestMobiBuy.Share.csproj", "TestMobiBuy.Share/"]
+COPY ["src/TestMobiBuy.Infrastructure/TestMobiBuy.Infrastructure.csproj", "TestMobiBuy.Infrastructure/"]
+
+COPY ["src/TestMobiBuy.Consumer/", "TestMobiBuy.Consumer/"]
+COPY ["src/TestMobiBuy.Application/", "TestMobiBuy.Application/"]
+COPY ["src/TestMobiBuy.Domain/", "TestMobiBuy.Domain/"]
+COPY ["src/TestMobiBuy.Share/", "TestMobiBuy.Share/"]
+COPY ["src/TestMobiBuy.Infrastructure/", "TestMobiBuy.Infrastructure/"]
+
+# Restaura e publica o projeto
+WORKDIR /app/TestMobiBuy.Consumer
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
+
+# Imagem final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/TestMobiBuy.Consumer/out .
+ENTRYPOINT ["dotnet", "TestMobiBuy.Consumer.dll"] 

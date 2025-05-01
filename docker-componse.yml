@@ -1,0 +1,94 @@
+version: "3.4"
+
+services:
+  testmobibuy-db:
+    image: postgres:16
+    container_name: testmobibuy-db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=testmobibuy
+      - POSTGRES_USER=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/core/home:/data/db
+    networks:
+      - testmobibuy-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  testmobibuy-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
+    container_name: testmobibuy-api
+    environment:
+      - BUILD_CONFIGURATION=Release
+      - ASPNETCORE_URLS=http://+:5006
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=testmobibuy-db;Port=5432;Database=testmobibuy;Username=postgres;Password=postgres
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
+      - RabbitMq__Host=rabbitmq
+      - RabbitMq__Username=guest
+      - RabbitMq__Password=guest
+      - RabbitMq__VirtualHost=/
+    volumes:
+      - ./.docker/core/home:/data/api
+    depends_on:
+      testmobibuy-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    networks:
+      - testmobibuy-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: testmobibuy-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - ./.docker/rabbitmq/data:/var/lib/rabbitmq
+    networks:
+      - testmobibuy-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  testmobibuy-consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.Consumer
+    container_name: testmobibuy-consumer
+    environment:
+      - BUILD_CONFIGURATION=Release
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
+      - RabbitMq__Host=rabbitmq
+      - RabbitMq__Username=guest
+      - RabbitMq__Password=guest
+      - RabbitMq__VirtualHost=/
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      testmobibuy-api:
+        condition: service_started
+      testmobibuy-db:
+        condition: service_healthy
+    networks:
+      - testmobibuy-network
+
+networks:
+  testmobibuy-network:
+    driver: bridge

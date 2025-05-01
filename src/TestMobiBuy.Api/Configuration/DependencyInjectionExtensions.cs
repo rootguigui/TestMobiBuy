@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,7 @@ public static class DependencyInjectionExtensions
         services.AddServices();
         services.AddRepositories();
         services.AddExternals();
+        services.AddRabbitMQ(config);
         services.AddCompression();
         services.AddJsonSerializer();
         services.AddControllers();
@@ -49,6 +51,25 @@ public static class DependencyInjectionExtensions
         services.Configure<ExternalServicesSettings>(config.GetSection(ExternalServicesSettings.SectionName));
 
         return services;
+    }
+
+    public static void AddRabbitMQ(this IServiceCollection services, IConfiguration configuration)
+    {
+        var rabbitMqSettings = configuration.GetSection("RabbitMq").Get<RabbitMqSettings>();
+        
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(rabbitMqSettings.Host, rabbitMqSettings.VirtualHost, h =>
+                {
+                    h.Username(rabbitMqSettings.Username);
+                    h.Password(rabbitMqSettings.Password);
+                });
+            });
+        });
+
+        services.AddScoped<IMessageBusService, MessageBusService>();
     }
     
     private static IServiceCollection AddSwaggerDocs(this IServiceCollection services, IConfiguration config)
@@ -101,6 +122,16 @@ public static class DependencyInjectionExtensions
     private static void AddConfigureOptions(this IServiceCollection services, IConfiguration config)
     {
         services.AddDbContext<DataContext>(options => options.UseNpgsql(config.GetConnectionString("DefaultConnection")));
+
+        // Executar migrações ao iniciar a aplicação
+        using (var serviceProvider = services.BuildServiceProvider())
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+                dbContext.Database.Migrate();
+            }
+        }
     }
 
     private static void AddServices(this IServiceCollection services)

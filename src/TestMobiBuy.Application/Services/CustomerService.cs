@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Text.Json;
 using TestMobiBuy.Application.Dtos;
 using TestMobiBuy.Application.Interfaces;
 using TestMobiBuy.Application.Mappers;
@@ -13,17 +14,20 @@ public class CustomerService : ICustomerService
     private readonly ICustomerRepository _customerRepository;
     private readonly ICustomerAddressRepository _customerAddressRepository;
     private readonly IViaCepApiExternal _viaCepApiExternal;
+    private readonly IMessageBusService _messageBusService;
 
     public CustomerService
     (
         ICustomerRepository customerRepository,
         ICustomerAddressRepository customerAddressRepository,
-        IViaCepApiExternal viaCepApiExternal
+        IViaCepApiExternal viaCepApiExternal,
+        IMessageBusService messageBusService
     )
     {
         _customerRepository = customerRepository;
         _customerAddressRepository = customerAddressRepository;
         _viaCepApiExternal = viaCepApiExternal;
+        _messageBusService = messageBusService;
     }
 
     public async Task<CustomerDto?> GetByIdAsync(int customerId)
@@ -71,6 +75,8 @@ public class CustomerService : ICustomerService
 
         await _customerAddressRepository.AddAsync(newCustomerAddress);
         await _customerAddressRepository.SaveChangesAsync();
+
+        await _messageBusService.Publish(customerCreateDto);
 
         return newCustomer?.ToDto();
     }
