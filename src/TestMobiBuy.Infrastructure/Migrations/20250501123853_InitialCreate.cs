@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
@@ -10,6 +11,7 @@ namespace TestMobiBuy.Infrastructure.Migrations
     public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
@@ -75,6 +77,7 @@ namespace TestMobiBuy.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

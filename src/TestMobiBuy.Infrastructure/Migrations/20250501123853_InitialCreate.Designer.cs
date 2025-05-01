@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TestMobiBuy.Infrastructure.Contexts;
-
+using System.Diagnostics.CodeAnalysis;
 #nullable disable
 
 namespace TestMobiBuy.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20250501123853_InitialCreate")]
+    [ExcludeFromCodeCoverage]
     partial class InitialCreate
     {
         /// <inheritdoc />

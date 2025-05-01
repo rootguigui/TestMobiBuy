@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-
+using System.Diagnostics.CodeAnalysis;
 #nullable disable
 
 namespace TestMobiBuy.Infrastructure.Migrations
 {
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public partial class ChangeNameColumnCustomerAddress : Migration
     {
         /// <inheritdoc />

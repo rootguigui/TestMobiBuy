@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestMobiBuy.Share", "src\Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestMobiBuy.Consumer", "src\TestMobiBuy.Consumer\TestMobiBuy.Consumer.csproj", "{57F80290-D6EE-4682-B0C4-9439FD071A91}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestMobiBuy.UnitTests", "src\TestMobiBuy.UnitTests\TestMobiBuy.UnitTests.csproj", "{9692B211-27CB-4282-8480-D05481252B4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{57F80290-D6EE-4682-B0C4-9439FD071A91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57F80290-D6EE-4682-B0C4-9439FD071A91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57F80290-D6EE-4682-B0C4-9439FD071A91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9692B211-27CB-4282-8480-D05481252B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9692B211-27CB-4282-8480-D05481252B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9692B211-27CB-4282-8480-D05481252B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9692B211-27CB-4282-8480-D05481252B4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

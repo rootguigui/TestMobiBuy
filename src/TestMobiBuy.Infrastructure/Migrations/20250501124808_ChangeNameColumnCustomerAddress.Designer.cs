@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TestMobiBuy.Infrastructure.Contexts;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
@@ -16,6 +17,7 @@ namespace TestMobiBuy.Infrastructure.Migrations
     partial class ChangeNameColumnCustomerAddress
     {
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
