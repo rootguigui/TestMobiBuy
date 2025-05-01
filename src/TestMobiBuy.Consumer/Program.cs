@@ -7,8 +7,6 @@ var builder = Host.CreateDefaultBuilder(args);
 
 builder.ConfigureServices((hostContext, services) =>
 {
-    services.AddHostedService<Worker>();
-
     var rabbitMqConfig = hostContext.Configuration.GetSection("RabbitMq").Get<RabbitMqSettings>();
     services.Configure<SmtpSettings>(hostContext.Configuration.GetSection(SmtpSettings.SectionName));
 
